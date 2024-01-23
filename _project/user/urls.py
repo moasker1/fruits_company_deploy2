@@ -12,6 +12,8 @@ urlpatterns = [
     path('containerupdate/<int:id>',views.container_update, name='containerupdate' ),
     path('condetails/<int:id>',views.container_details, name='condetails' ),
     path('containerexpensesdelete/<int:id>',views.container_expenses_delete, name='containerexpensesdelete' ),
+    path('containerbillupdate/<int:id>', views.container_bill_update, name='containerbillupdate'),
+    path('containerbilldelete/<int:id>', views.container_bill_delete, name='containerbilldelete'),
     path('containerItems/<int:id>',views.container_items, name='containeritems' ),
     path('containeritemdelete/<int:id>',views.containeritem_delete, name='containeritemdelete' ),
     path('today',views.today_containers, name='today' ),
@@ -43,5 +45,7 @@ urlpatterns = [
     path('suppliersort',views.supplier_sort, name='suppliersort' ),
     path('suppliersdelete/<int:id>',views.supplier_delete, name='suppliersdelete' ),
     path('supplierupdate/<int:id>',views.supplier_update, name='supplierupdate' ),
+    path('supplierprofits',views.supplier_profits, name='supplierprofits' ),
+    path('supplierprofitsdelete/<int:id>',views.supplier_profits_delete, name='supplierprofitsdelete' ),
 ]
     
