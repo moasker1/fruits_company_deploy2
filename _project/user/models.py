@@ -14,10 +14,10 @@ class Supplier(models.Model):
 
     @property
     def balance(self):
-        total_con_price = sum(container.total_con_price for container in self.container_set.all())
+        total_sale_price = sum(container.total_sale_price for container in self.container_set.all())
         total_pay = self.supplierpay_set.aggregate(total_pay=Sum('pay'))['total_pay'] or 0
 
-        return total_con_price + self.opening_balance - total_pay
+        return total_sale_price + self.opening_balance - total_pay
 
     @property
     def num_of_containers(self):
@@ -177,16 +177,13 @@ class Sale(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            # Ensure that 'count' is a valid numeric type before performing the subtraction
             count = int(self.count)
 
-            # Update remaining_count in the associated ContainerItem
             container_item = self.container_item
             if container_item:
                 container_item.remaining_count = max(0, container_item.remaining_count - count)
                 container_item.save()
 
-            # Ensure that 'price' and 'weight' are valid numeric types before performing the multiplication
             price = float(self.price)
             weight = float(self.weight)
             self.total_sell_price = price * weight
@@ -260,13 +257,11 @@ class ContainerBill(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            # Convert price and weight to float before multiplication
             price = float(self.price)
             weight = float(self.weight)
 
             self.total_bill_row = price * weight
         except (ValueError, TypeError):
-            # Handle the case where price or weight cannot be converted to float
             self.total_bill_row = 0
 
         super().save(*args, **kwargs)

@@ -26,7 +26,7 @@
     <div class="detailscon">
         <h2> اسم العميل: <span>{{sup.name}}</span></h2>
         <h2>التاريخ : <span>{{sup.date|date:"20y/m/d"|arabic_numbers}}</span></h2>
-        <h2>الاجمالى الكلى: <span>{{sup.total|arabic_numbers}}</span></h2>
+        <h2>الاجمالى الكلى: <span>{{sup.balance|arabic_numbers}}</span></h2>
         <a href="{% url "addcontainer" %}" id="sellcar" class="sellingbtn" style="background-color: #00C2F4; text-decoration:none;">اضافة نقلة</a >
         </div>
         <div class="todayscar">
