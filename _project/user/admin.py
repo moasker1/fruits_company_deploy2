@@ -2,7 +2,10 @@ from django.contrib import admin
 from .models import Supplier, Seller, Container, Item, ContainerItem, Sale,Payment, Lose, ContainerExpense, ContainerBill, SupplierPay
 from django.db.models import Sum
 
-  
+admin.site.site_header = 'Pyramid tech'
+admin.site.site_title = 'إدارة موقع بيراميد'
+admin.site.index_title = 'الإدارة'
+
 
 @admin.register(Container)
 class ContainerAdmin(admin.ModelAdmin):
