@@ -20,14 +20,13 @@
         </div>
         <a href="{% url "sellcon" container.id %}"><i class="fa-solid fa-arrow-left"></i></a>
     </header>
-
-    <!-- طباعه الفاتوره -->
-    <div id="printcon" class="window" style="display: none;">
-        <i id="closeprintcon" class="fa-solid fa-xmark close"></i>
-        <i id="printbtn" class="fa-solid fa-print printing"></i>
-        <div id="printcontent">
+    <!-- طباعه الفاتوره التى تم انشاؤها-->
+    <div id="secprintcon" class="window" style="display: none;">
+        <i id="closesecprintcon" class="fa-solid fa-xmark close"></i>
+        <i id="secprintbtn" class="fa-solid fa-print printing"></i>
+        <div id="printseccontent">
             <img src="{% static "images/printgamal.png" %}" alt="">
-            <!-- <table>
+            <table>
                 <thead>
                     <tr>
                         <th>العدد</th>
@@ -38,7 +37,10 @@
                     </tr>
                 </thead>
                 <tbody id="tablebody">
-                    <h2 style="width: 90%;border-radius: 10px;margin: 0; border: 1px solid #625D5D; text-align: center;padding:0px 2px;">مطلوب من : <span>{{container.supplier.name}}</span></h2><br>
+                    <div style="width: 90%;border-radius: 10px;margin: 0; border: 1px solid #625D5D; text-align: center;padding:0px 2px;display: flex;align-items: center;justify-content: space-around;flex-direction: row;">
+                        <span style="font-size: 20px;">مطلوب من : {{container.supplier.name}}</span>
+                        <span id="secbillDate">date</span>
+                    </div><br>
                     {% for bill in container_bills %}
                         <tr>
                             <td>{{ bill.count|arabic_numbers }}</td>
@@ -48,22 +50,76 @@
                             <td>{{ bill.total_bill_row|arabic_numbers }}</td>
                         </tr>
                     {% endfor %}
-                    <tr>
-                        <td colspan="4">اجمالى وزن النقلة</td>
-                        <td>{{ container.total_bill_weight|arabic_numbers }}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: none;" colspan="4">اجمالى النقلة</td>
-                        <td style="border: none;">{{ total_bill_price|arabic_numbers }}</td>
-                    </tr>
                 </tbody>
-            </table> -->
+            </table>
+            <div class="detcon">
+                <div>
+                    <table class="mintable1">
+                        <thead>
+                            <tr>
+                                <th>صافى المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablebody">
+                            <tr>
+                                <td>اجمالى النقلة : <span >{{container.total_bill_price|arabic_numbers}}</span> جنيه</td>
+                                <td style="display: none;">اجمالى النقلة : <span id="secspan1">{{container.total_bill_price}}</span> جنيه</td>
+                            </tr>
+                            <tr>
+                                <td>الخصومات : <span>{{container.win|arabic_numbers}}</span> جنيه</td>
+                                <td style="display: none;">الخصومات : <span id="secspan2">{{container.win}}</span> جنيه</td>
+                            </tr>
+                            <tr>
+                                <td>المصروفات : <span>{{container.total_con_expenses|arabic_numbers}}</span> جنيه</td>
+                                <td style="display: none;">المصروفات : <span id="secspan3">{{container.total_con_expenses}}</span> جنيه</td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;">الصافى : <span id="secspantotal"></span> جنيه</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h2>المصروفات</h2>
+                    <table class="mintable1">
+                        <thead>
+                            <tr>
+                                <th>المبلغ</th>
+                                <th>النوع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablebody">
+                            {% for expense in expenses %}
+                            <tr>
+                                <td>{{expense.expense|arabic_numbers}}</td>
+                                <td>{{expense.expense_type}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <h2>الخصومات</h2>
+                    <ul>
+                        <li>العمولة : <span>{{container.commission|arabic_numbers}} جنيه </span></li>
+                        <li>مشال : <span>{{container.carry|arabic_numbers}} جنيه </span></li>
+                        <li>ايجار عدة : <span>{{container.tool_rent|arabic_numbers}} جنيه </span></li>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>    
+    </div>
+    <!-- طباعه الفاتوره -->
+    <div id="printcon" class="window" style="display: none;">
+        <i id="closeprintcon" class="fa-solid fa-xmark close"></i>
+        <i id="printbtn" class="fa-solid fa-print printing"></i>
+        <div id="printcontent">
+            <img src="{% static "images/printgamal.png" %}" alt="">
             <table>
                 <thead>
                     <tr>
-                        <th id="totbtn">العدد</th>
-                        <th id="weightbtn" >الوزن</i></th>
-                        <th id="pricebtn">السعر</th>
+                        <th>العدد</th>
+                        <th>الوزن</i></th>
+                        <th>السعر</th>
                         <th>الاجمالى</th>
                         <th>الصنف</th>
                     </tr>
@@ -97,10 +153,6 @@
                             </tr>
                         </thead>
                         <tbody id="tablebody">
-                            <!-- <tr>
-                                <td>اجمالى النقلة : <span >{{container.total_bill_price|arabic_numbers}}</span> جنيه</td>
-                                <td style="display: none;">اجمالى النقلة : <span id="span1">{{container.total_bill_price}}</span> جنيه</td>
-                            </tr> -->
                             <tr>
                                 <td>اجمالى النقلة : <span >{{container.total_sale_price|arabic_numbers}}</span> جنيه</td>
                                 <td style="display: none;">اجمالى النقلة : <span id="span1">{{container.total_sale_price}}</span> جنيه</td>
@@ -109,12 +161,10 @@
                                 <td>الخصومات : <span>{{container.win|arabic_numbers}}</span> جنيه</td>
                                 <td style="display: none;">الخصومات : <span id="span2">{{container.win}}</span> جنيه</td>
                             </tr>
-                            {% for expense in expenses %}
                             <tr>
-                                <td>المصروفات : <span>{{expense.expense|arabic_numbers}}</span> جنيه</td>
-                                <td style="display: none;">المصروفات : <span id="span3">{{expense.expense}}</span> جنيه</td>
+                                <td>المصروفات : <span>{{container.total_con_expenses|arabic_numbers}}</span> جنيه</td>
+                                <td style="display: none;">المصروفات : <span id="span3">{{container.total_con_expenses}}</span> جنيه</td>
                             </tr>
-                            {% endfor %}
                             <tr>
                                 <td style="border: none;">الصافى : <span id="spantotal"></span> جنيه</td>
                             </tr>
@@ -144,7 +194,6 @@
                         <li>العمولة : <span>{{container.commission|arabic_numbers}} جنيه </span></li>
                         <li>مشال : <span>{{container.carry|arabic_numbers}} جنيه </span></li>
                         <li>ايجار عدة : <span>{{container.tool_rent|arabic_numbers}} جنيه </span></li>
-                        <li class="head">الاجمالى : <span>{{container.win|arabic_numbers}} جنيه </span></li>
                     </ul>
                     
                 </div>
@@ -241,7 +290,7 @@
                 </table>
             </div>
             <!-- <button id="deleteoradd" class="deletaadd">مصروفــات</button> -->
-            <button id="print">طباعة</button>
+            
         </div>
         <div class="left">
             <div class="detailscon">
@@ -253,7 +302,7 @@
                 <!-- <h2>فرق الوزن : <span>{{container.weight_difference|arabic_numbers}}</span></h2>
                 <h2>فرق الفاتورة : <span>{{container.price_difference|arabic_numbers}}</span></h2> -->
             </div>
-            <!-- <div class="table">
+            <div class="table">
                 <table>
                     <thead>
                         <tr>
@@ -279,7 +328,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
-            </div> -->
+            </div>
             <div class="carinputs">
                 <form method ="POST" action="{% url "condetails" container.id %}" class="windows" id="profits">
                     {% csrf_token %}
@@ -308,12 +357,59 @@
                     </div>
                 </form>
             </div>
-            <!-- <form method="POST" action="{% url 'condetails' container.id %}" class="table" id="bills" style="display: flex; margin: 10px 0px;">
+        </div>
+    </div>
+    <div class="bills_container">
+        <div class="todayscar">
+            <div class="title">
+                <h1>الفاتورة الاساسية</h1>
+            </div>
+            <div class="tables">
+                <button id="print" class="print">طباعة</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العدد</th>
+                            <th>الوزن</i></th>
+                            <th>السعر</th>
+                            <th>الاجمالى</th>
+                            <th>الصنف</th>
+                            <th>التاريخ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablesellbody">
+                        {% for sale in sales  %}
+                        <tr>
+                            
+                            <td style="display: none;">{{sale.count}}</td>
+                            <td>{{sale.count|arabic_numbers}}</td>
+                            <td style="display: none;">{{sale.weight}}</td>
+                            <td>{{sale.weight|arabic_numbers}}</td>
+                            <td style="display: none;">{{sale.price}}</td>
+                            <td>{{sale.price|arabic_numbers}}</td>
+                            <td>{{sale.total_sell_price|arabic_numbers}}</td>
+                            <td>{{sale.container_item}}</td>
+                            <td>{{sale.date|date:"20y/m/d"|arabic_numbers}}</td>
+                            <td><a href="{% url "saledelete" sale.id %}" id="deletecar" class="btn"  style="color: #FF0000;" ><i class="fa-solid fa-trash"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="todayscar" id="bills" >
+        
+        <div class="title">
+            <h1>الفاتورة المنشأة</h1>
+        </div>
+        <div class="tables">
+            <button id="printBillBtn" class="print">طباعة</button>
+            <form method="POST" action="{% url 'condetails' container.id %}">
                 {% csrf_token %}
                 {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
-                <h2>فاتورة النقلة</h2><br>
                 <div class="billinputs">
                     <input type="number" name="count" placeholder="العدد" required>
                     <input type="number" name="weight" step="0.01" placeholder="الوزن" required>
@@ -361,70 +457,26 @@
                         </tr>
                     </tbody>
                 </table>
-            </form> -->
-            <div class="todayscar">
-                <div class="title">
-                    <h1>فاتورة النقلة</h1>
-                </div>
-                <div class="table">
-                    <input id="searchbar" type="text" placeholder="ابحث باستخدام اسم البائع">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th id="totbtn">العدد</th>
-                                <th id="weightbtn" >الوزن</i></th>
-                                <th id="pricebtn">السعر</th>
-                                <th>الاجمالى</th>
-                                <th>الصنف</th>
-                                <th>التاريخ</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablesellbody">
-                            {% for sale in sales  %}
-                            <tr>
-                                
-                                <td style="display: none;">{{sale.count}}</td>
-                                <td>{{sale.count|arabic_numbers}}</td>
-                                <td style="display: none;">{{sale.weight}}</td>
-                                <td>{{sale.weight|arabic_numbers}}</td>
-                                <td style="display: none;">{{sale.price}}</td>
-                                <td>{{sale.price|arabic_numbers}}</td>
-                                <td>{{sale.total_sell_price|arabic_numbers}}</td>
-                                <td>{{sale.container_item}}</td>
-                                <td>{{sale.date|date:"20y/m/d"|arabic_numbers}}</td>
-                                <td><a href="{% url "saledelete" sale.id %}" id="deletecar" class="btn"  style="color: #FF0000;" ><i class="fa-solid fa-trash"></i></a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
             </div>
+            </form>
         </div>
-    </div>
-    <!-- <script>
-        // Ensure the script runs after the document is fully loaded
-        window.addEventListener('load', function () {
-            // Update the 'price' input field when the selected 'container_item' changes
-            document.getElementById('kind-select').addEventListener('change', function () {
-                var selectedOption = this.options[this.selectedIndex];
-                var priceInputBill = document.getElementById('priceInputBill');
-                // Perform a null or undefined check before setting the value
-                if (selectedOption && selectedOption.hasAttribute('data-price')) {
-                    var price = parseFloat(selectedOption.getAttribute('data-price'));
-                    priceInputBill.value = isNaN(price) ? '' : price.toFixed(2);
-                } else {
-                    priceInputBill.value = '';  // or set to default value if needed
-                }
-            });
-        });
-    </script> -->
+        
+       </div>
     <script>
     document.getElementById('print').addEventListener('click',function(){
     document.getElementById('printcon').style.display='flex';
     });
+    document.getElementById('printBillBtn').addEventListener('click',function(){
+    document.getElementById('secprintcon').style.display='flex';
+    });
     document.getElementById('closeprintcon').addEventListener('click',function(){
         document.getElementById('printcon').style.display='none';
+    })
+    document.getElementById('closesecprintcon').addEventListener('click',function(){
+        document.getElementById('secprintcon').style.display='none';
+    })
+    document.getElementById('secprintbtn').addEventListener('click', function(){
+        printDiv('printseccontent')    
     })
     document.getElementById('printbtn').addEventListener('click', function(){
         printDiv('printcontent')    
@@ -461,35 +513,35 @@
             font-family: Arial, Helvetica, sans-serif;
         }
         body{direction:rtl;display:flex; align-items:start; flex-direction:column;height:100vh;}
-        #printcontent table{
+        #printcontent table,#printseccontent table{
         width: 80%;
         text-align: center;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #625D5D;
         }
-        #printcontent table thead{
+        #printcontent table thead,#printseccontent table thead{
             background-color:#74C785;
         }
-        #printcontent table th{
+        #printcontent table th,#printseccontent table th{
             font-size: 15px;
             color: #000;
             padding: 5px;
             border-bottom: 1px solid #625D5D;
         }
-        #printcontent table td{
+        #printcontent table td,#printseccontent table td{
             font-size: 15px;
             border-bottom: 1px solid #625D5D;
             padding: 5px;
             color: #625D5D;
         }
-        #printcontent table td .btn{
+        #printcontent table td .btn,#printseccontent table td .btn{
             border: none;
             background-color: transparent;
             font-size: 15px;
             cursor: pointer;
         }
-        #printcontent{
+        #printcontent,#printseccontent{
             top: 0;
             display: flex;
             align-items: center;
@@ -497,10 +549,10 @@
             flex-direction: column;
             direction: rtl;
         }
-        #printcontent span{
+        #printcontent span,#printseccontent span{
             font-size:10px;
         }
-        #printcontent .detcon{
+        #printcontent .detcon,#printseccontent .detcon{
             margin: 5px;
             width: 90%;
             display: flex;
@@ -509,19 +561,19 @@
             flex-wrap: wrap;
             flex-direction: row;
         }
-        #printcontent .detcon div{width: 40%; text-align: center;}
-        #printcontent .detcon table,.detcon ul{
+        #printcontent .detcon div,#printseccontent .detcon div{width: 40%; text-align: center;}
+        #printcontent .detcon table,#printseccontent .detcon table,.detcon ul{
             width: 100%;
             text-align: center;
         }
-        #printcontent img{
+        #printcontent img,#printseccontent img{
             width: 90%;
         }
-        #printcontent h2{
+        #printcontent h2,#printseccontent h2{
             margin: 5px;
             font-size:15px;
         }
-        #printcontent ul{
+        #printcontent ul,#printseccontent ul{
             width: 100%;
             text-align: start;
             list-style: none;
@@ -530,11 +582,11 @@
             overflow: hidden;
             border: 1px solid #625D5D;
         }
-        #printcontent ul .head{
+        #printcontent ul .head,#printseccontent ul .head{
             background-color:#74C785;
             color: #000;
         }
-        #printcontent ul li{
+        #printcontent ul li,#printseccontent ul li{
             padding: 5px ;
             font-size: 15px;
             color: #000;
@@ -573,6 +625,17 @@
         maximumFractionDigits: 2
     });
     document.getElementById('spantotal').innerHTML = arabicNumber;
+    //================================================================================
+    let secspan1 = document.getElementById('secspan1').innerHTML
+    let secspan2 = document.getElementById('secspan2').innerHTML
+    let secspan3 = document.getElementById('secspan3').innerHTML
+    let sectotalcar =  parseFloat(secspan1)-parseFloat(secspan2)-parseFloat(secspan3);
+    const secarabicNumber = sectotalcar.toLocaleString('ar-EG', {
+        minimumFractionDigits: 2, // Ensure a comma separator
+        maximumFractionDigits: 2
+    });
+    document.getElementById('secbillDate').innerHTML=formattedDate
+    document.getElementById('secspantotal').innerHTML = secarabicNumber;
     </script>
 </body>
 </html>

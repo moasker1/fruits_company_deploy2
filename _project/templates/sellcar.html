@@ -37,7 +37,11 @@
         <h2>فرق الوزن : <span>{{container.weight_difference|arabic_numbers}}</span></h2>
         <h2>فرق الفاتورة : <span>{{container.price_difference|arabic_numbers}}</span></h2> -->
     </div>
-    
+    <div class="carKinds">
+        {% for item in container.containeritem_set.all %}
+        <span meta_data="{{item.remaining_count}}" class="carKind" id="carKind">{{item.item.name}} : {{item.remaining_count|arabic_numbers}}</span>
+        {% endfor %}
+    </div>
     <form method="POST" class="sellcon" action="{% url 'sellcon' container.id %}">
         {% csrf_token %}
         <ul class="messages">
@@ -48,8 +52,8 @@
         <select name="container_item" id="container_item">
             {% for item in container.containeritem_set.all %}
                 <option value="{{ item.item.name }}" data-price="{{ item.price }}">{{ item.item.name }}</option>
-            {% endfor %}
-        </select>
+                {% endfor %}
+            </select>
             <input type="hidden" name="container_id" value="{{ container.id }}">
             <input name="count" type="number" id="count" placeholder="العدد">
             <input name="weight" type="number" step="0.01" placeholder="الوزن">
@@ -70,10 +74,6 @@
                     </table>
                 </div>
             </nav>
-                <!-- <option value="اختر البائع">أختر البائع</option>
-                {% for seller in sellers %}
-                    <option value="{{ seller.name }}">{{ seller.name }}</option>
-                {% endfor %} -->
             <select name="tool" id="">
                 <option value="اخر">اخر</option>
                 <option value="صناديق كبيرة">صناديق كبيرة</option>
@@ -210,11 +210,26 @@
         window.addEventListener('load', function () {
             // Update the 'price' input field when the selected 'container_item' changes
             document.getElementById('container_item').addEventListener('change', function () {
-                var selectedOption = this.options[this.selectedIndex];
+                var selectedOption = this.options[0];
                 var priceInput = document.getElementById('priceInput');
                 priceInput.value = parseFloat(selectedOption.getAttribute('data-price')) || '';
             });
         });
+            function highlightCarKinds() {
+                const carKindElements = document.querySelectorAll('[id="carKind"]');
+                for (const carKindElement of carKindElements) {
+                    const metaData = carKindElement.getAttribute('meta_data');
+                    console.log(metaData)
+                    if (metaData === '0') {
+                    carKindElement.style.background = '#e60e0e';
+                    } else if (metaData !== null) { // Ensure metaData is present and not 0
+                    carKindElement.style.background = '#00C2F4';
+                    carKindElement.style.color = '#040404';
+                    }
+                }
+            }
+        // Call the function to apply the highlighting
+        highlightCarKinds();
     </script>
 </body>
 </html>
